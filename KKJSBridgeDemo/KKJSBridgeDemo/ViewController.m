@@ -26,12 +26,13 @@
         
     // 注册 HtmlURLProtocol，使用离线包
     [NSURLProtocol registerClass:HtmlURLProtocol.class];
-    
-    [KKJSBridgeGlobalConfig config].enableAjaxHook = YES;
 }
 - (IBAction)thirdClickAction:(id)sender {
     ThirdWebViewController *vc = [[ThirdWebViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
+}
+- (IBAction)ajaxControl:(UISwitch *)sender {
+    [KKJSBridgeGlobalConfig config].enableAjaxHook = sender.on;
 }
 
 - (void)load {
