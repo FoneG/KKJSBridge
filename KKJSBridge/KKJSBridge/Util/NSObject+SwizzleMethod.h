@@ -13,13 +13,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 是否原先存在originalSel
 /// @param originalSel /
-+ (BOOL)existSourceInstanceMethod:(SEL)originalSel;
++ (BOOL)kk_existSourceInstanceMethod:(SEL)originalSel;
 
 /// 添加一个空的方法
 /// @param originalSel  /
-+ (void)AddInstanceEmptyMethod:(SEL)originalSel;
++ (void)kk_AddInstanceEmptyMethod:(SEL)originalSel;
 
-+ (BOOL)swizzleOrAddInstanceMethod:(SEL)originalSel
++ (BOOL)kk_swizzleOrAddInstanceMethod:(SEL)originalSel
                         withNewSel:(SEL)newSel
                    withNewSelClass:(Class)newSelClass;
 @end

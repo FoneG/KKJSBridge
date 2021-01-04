@@ -11,9 +11,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface WKwebViewEngineBridge : NSObject
-
-@property (nonatomic, weak, readonly) WKWebView *webView;
-
 /**
  为 webViewEngin 创建一个桥接
  

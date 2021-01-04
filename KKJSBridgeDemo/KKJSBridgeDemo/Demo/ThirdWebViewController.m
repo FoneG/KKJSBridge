@@ -8,7 +8,7 @@
 
 #import "ThirdWebViewController.h"
 #import <WebKit/WebKit.h>
-#import "A.h"
+#import "ThridWebView.h"
 #import <KKJSBridge/KKJSBridge.h>
 
 @interface ThirdWebViewController ()
@@ -24,7 +24,7 @@
     NSString *url = @"https://www.baidu.com";
     
     self.view.backgroundColor = [UIColor whiteColor];
-    WKWebView *webView = [[WKWebView alloc] initWithFrame:self.view.bounds];
+    ThridWebView *webView = [[ThridWebView alloc] initWithFrame:self.view.bounds];
     [self.view addSubview:webView];
     [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];
 }

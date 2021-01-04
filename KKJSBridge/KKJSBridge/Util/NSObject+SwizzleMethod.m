@@ -9,7 +9,7 @@
 #import <objc/runtime.h>
 
 @implementation NSObject (SwizzleMethod)
-+ (BOOL)existSourceInstanceMethod:(SEL)originalSel{
++ (BOOL)kk_existSourceInstanceMethod:(SEL)originalSel{
     if (!class_getInstanceMethod(self, originalSel)) {
         return NO;
     }
@@ -20,7 +20,7 @@
     return YES;
 }
 
-+ (void)AddInstanceEmptyMethod:(SEL)originalSel{
++ (void)kk_AddInstanceEmptyMethod:(SEL)originalSel{
     IMP rVoidIMP = imp_implementationWithBlock(^ (void) {
         return nil;
     });
@@ -30,7 +30,7 @@
                     NULL);
 }
 
-+ (BOOL)swizzleOrAddInstanceMethod:(SEL)originalSel
++ (BOOL)kk_swizzleOrAddInstanceMethod:(SEL)originalSel
                         withNewSel:(SEL)newSel
                    withNewSelClass:(Class)newSelClass {
     Method originalMethod = class_getInstanceMethod(self, originalSel);

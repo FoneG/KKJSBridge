@@ -20,8 +20,8 @@
 @implementation WKWebView (EngineBridge)
 
 + (void)load{
-    [WKWebView swizzleOrAddInstanceMethod:@selector(initWithFrame:configuration:) withNewSel:@selector(mb_initWithFrame:configuration:) withNewSelClass:WKWebView.class];
-    [WKWebView swizzleOrAddInstanceMethod:@selector(loadRequest:) withNewSel:@selector(mb_loadRequest:) withNewSelClass:WKWebView.class];
+    [WKWebView kk_swizzleOrAddInstanceMethod:@selector(initWithFrame:configuration:) withNewSel:@selector(mb_initWithFrame:configuration:) withNewSelClass:WKWebView.class];
+    [WKWebView kk_swizzleOrAddInstanceMethod:@selector(loadRequest:) withNewSel:@selector(mb_loadRequest:) withNewSelClass:WKWebView.class];
 }
 
 - (instancetype)mb_initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration *)configuration {
