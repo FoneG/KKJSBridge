@@ -26,7 +26,7 @@ static NSString * const kKKJSBridgeNSURLProtocolKey = @"kKKJSBridgeNSURLProtocol
         return NO;
     }
   
-    NSLog(@"HtmlURLProtocol %@", request.URL.absoluteString);
+//    NSLog(@"HtmlURLProtocol %@", request.URL.absoluteString);
     return YES;
 }
 

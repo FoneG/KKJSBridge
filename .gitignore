@@ -6,3 +6,4 @@ KKJSBridge/TS/node_modules/*
 KKJSBridge/TS/package-lock.json
 KKJSBridgeDemo/Podfile.lock
 KKJSBridgeDemo/Pods/*
+xcuserdata

@@ -15,9 +15,9 @@
 #import "ModuleC.h"
 #import "ModuleDefault.h"
 
-@interface WebViewController ()<KKWebViewDelegate>
+@interface WebViewController ()<KKWebViewDelegate, WKNavigationDelegate>
 
-@property (nonatomic, strong, readwrite) KKWebView *webView;
+@property (nonatomic, strong, readwrite) WKWebView *webView;
 @property (nonatomic, copy, readwrite) NSString *url;
 @property (nonatomic, strong) KKJSBridgeEngine *jsBridgeEngine;
 
@@ -34,13 +34,13 @@
 
 + (void)prepareWebView {
     // 预先缓存一个 webView
-    [KKWebView configCustomUAWithType:KKWebViewConfigUATypeAppend UAString:@"KKJSBridge/1.0.0"];
+    [WKWebView configCustomUAWithType:KKWebViewConfigUATypeAppend UAString:@"KKJSBridge/1.0.0"];
     [[KKWebViewPool sharedInstance] makeWebViewConfiguration:^(WKWebViewConfiguration * _Nonnull configuration) {
         // 必须前置配置，否则会造成属性不生效的问题
         configuration.allowsInlineMediaPlayback = YES;
         configuration.preferences.minimumFontSize = 12;
     }];
-    [[KKWebViewPool sharedInstance] enqueueWebViewWithClass:KKWebView.class];
+    [[KKWebViewPool sharedInstance] enqueueWebViewWithClass:WKWebView.class];
     KKJSBridgeConfig.ajaxDelegateManager = (id<KKJSBridgeAjaxDelegateManager>)self; // 请求外部代理处理，可以借助 AFN 网络库来发送请求
 }
 
@@ -67,20 +67,9 @@
 }
 
 - (void)commonInit {
-    _webView = [[KKWebViewPool sharedInstance] dequeueWebViewWithClass:KKWebView.class webViewHolder:self];
-    _webView.navigationDelegate = self;
-    _jsBridgeEngine = [KKJSBridgeEngine bridgeForWebView:self.webView];
-    _jsBridgeEngine.config.enableAjaxHook = YES;
-    _jsBridgeEngine.bridgeReadyCallback = ^(KKJSBridgeEngine * _Nonnull engine) {
-        NSString *event = @"customEvent";
-        NSDictionary *data = @{
-            @"action": @"testAction",
-            @"data": @YES
-        };
-        [engine dispatchEvent:event data:data];
-    };
+    _webView = [[KKWebViewPool sharedInstance] dequeueWebViewWithClass:WKWebView.class webViewHolder:self];
     
-    [self compatibleWebViewJavascriptBridge];
+//    [self compatibleWebViewJavascriptBridge];
     [self registerModule];
     [self loadRequest];
 }
@@ -202,15 +191,16 @@
 #pragma mark - WKNavigationDelegate
 // 在发送请求之前，决定是否跳转
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
-    if ([navigationAction.request.URL.absoluteString containsString:@"https://__bridge_loaded__"]) {// 防止 WebViewJavascriptBridge 注入
-        decisionHandler(WKNavigationActionPolicyCancel);
-        return;
-    }
-   
     decisionHandler(WKNavigationActionPolicyAllow);
+    NSLog(@"%s", __func__);
 }
 
-// 页面跳转完成时调用
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler {
+    decisionHandler(WKNavigationResponsePolicyAllow);
+}
+
+//
+//// 页面跳转完成时调用
 - (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation {
     self.navigationItem.title = webView.title;
 }

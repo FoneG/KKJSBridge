@@ -10,6 +10,7 @@
 #import "WebViewController.h"
 #import "HtmlURLProtocol.h"
 #import <KKJSBridge/KKJSBridge.h>
+#import "ThirdWebViewController.h"
 
 @interface ViewController ()
 
@@ -22,9 +23,13 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"加载" style:UIBarButtonItemStylePlain target:self action:@selector(load)];
     NSString *libraryPath = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask,YES).firstObject;
     NSLog(@"libraryPath = %@", libraryPath);
-    
+        
     // 注册 HtmlURLProtocol，使用离线包
     [NSURLProtocol registerClass:HtmlURLProtocol.class];
+}
+- (IBAction)thirdClickAction:(id)sender {
+    ThirdWebViewController *vc = [[ThirdWebViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)load {
@@ -64,6 +69,7 @@
     }
     url = @"https://h5.leoao.com/fit-m/#/pages/pt/index";
     url = @"https://h5.leoao.com/multiple/coach/cert.html#/certEdit";
+    url = @"http://www.baidu.com";
     WebViewController *web = [[WebViewController alloc] initWithUrl:url];
     [self.navigationController pushViewController:web animated:YES];
 }

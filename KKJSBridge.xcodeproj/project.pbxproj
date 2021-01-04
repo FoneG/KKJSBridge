@@ -43,6 +43,10 @@
 		7C83A73A2340590400A49A52 /* KKJSBridgeStreamingMultipartFormData.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C83A7372340590300A49A52 /* KKJSBridgeStreamingMultipartFormData.m */; };
 		7C83A73B2340590400A49A52 /* KKJSBridgeURLRequestSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C83A7382340590300A49A52 /* KKJSBridgeURLRequestSerialization.m */; };
 		7CAFA8042567C9FE0039FF6D /* WKWebView+KKJSBridgeEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CAFA8032567C9FE0039FF6D /* WKWebView+KKJSBridgeEngine.m */; };
+		B425EC8425A2CBA600AA58E1 /* WKWebView+DefaultEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = B425EC7F25A2CBA600AA58E1 /* WKWebView+DefaultEngine.m */; };
+		B425EC8525A2CBA600AA58E1 /* NSObject+EnginBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = B425EC8225A2CBA600AA58E1 /* NSObject+EnginBridge.m */; };
+		B425EC8625A2CBA600AA58E1 /* WKwebViewEngineBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = B425EC8325A2CBA600AA58E1 /* WKwebViewEngineBridge.m */; };
+		B425EC8A25A2CBB400AA58E1 /* NSObject+SwizzleMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = B425EC8925A2CBB400AA58E1 /* NSObject+SwizzleMethod.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -118,6 +122,14 @@
 		7C83A7392340590300A49A52 /* KKJSBridgeStreamingMultipartFormData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KKJSBridgeStreamingMultipartFormData.h; sourceTree = "<group>"; };
 		7CAFA8022567C9FE0039FF6D /* WKWebView+KKJSBridgeEngine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WKWebView+KKJSBridgeEngine.h"; sourceTree = "<group>"; };
 		7CAFA8032567C9FE0039FF6D /* WKWebView+KKJSBridgeEngine.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "WKWebView+KKJSBridgeEngine.m"; sourceTree = "<group>"; };
+		B425EC7E25A2CBA600AA58E1 /* NSObject+EnginBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+EnginBridge.h"; sourceTree = "<group>"; };
+		B425EC7F25A2CBA600AA58E1 /* WKWebView+DefaultEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WKWebView+DefaultEngine.m"; sourceTree = "<group>"; };
+		B425EC8025A2CBA600AA58E1 /* WKwebViewEngineBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WKwebViewEngineBridge.h; sourceTree = "<group>"; };
+		B425EC8125A2CBA600AA58E1 /* WKWebView+DefaultEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WKWebView+DefaultEngine.h"; sourceTree = "<group>"; };
+		B425EC8225A2CBA600AA58E1 /* NSObject+EnginBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+EnginBridge.m"; sourceTree = "<group>"; };
+		B425EC8325A2CBA600AA58E1 /* WKwebViewEngineBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WKwebViewEngineBridge.m; sourceTree = "<group>"; };
+		B425EC8825A2CBB400AA58E1 /* NSObject+SwizzleMethod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SwizzleMethod.h"; sourceTree = "<group>"; };
+		B425EC8925A2CBB400AA58E1 /* NSObject+SwizzleMethod.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SwizzleMethod.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -227,6 +239,8 @@
 		7C31E01B2317EC0800152D06 /* Util */ = {
 			isa = PBXGroup;
 			children = (
+				B425EC8825A2CBB400AA58E1 /* NSObject+SwizzleMethod.h */,
+				B425EC8925A2CBB400AA58E1 /* NSObject+SwizzleMethod.m */,
 				7C670B43247E15E800366253 /* KKJSBridgeMacro.h */,
 				7C31E0222317EC0800152D06 /* KKJSBridgeJSExecutor.h */,
 				7C31E01F2317EC0800152D06 /* KKJSBridgeJSExecutor.m */,
@@ -285,6 +299,7 @@
 			children = (
 				7C31E03B2317EC0800152D06 /* KKWebView.h */,
 				7C31E0342317EC0800152D06 /* KKWebView.m */,
+				B425EC7D25A2CBA600AA58E1 /* EngineBridge */,
 				7C31E0352317EC0800152D06 /* Extension */,
 				7C31E0382317EC0800152D06 /* CookieManager */,
 				7C31E03C2317EC0800152D06 /* WebViewPool */,
@@ -359,6 +374,19 @@
 				7C83A7392340590300A49A52 /* KKJSBridgeStreamingMultipartFormData.h */,
 			);
 			path = FormData;
+			sourceTree = "<group>";
+		};
+		B425EC7D25A2CBA600AA58E1 /* EngineBridge */ = {
+			isa = PBXGroup;
+			children = (
+				B425EC7E25A2CBA600AA58E1 /* NSObject+EnginBridge.h */,
+				B425EC7F25A2CBA600AA58E1 /* WKWebView+DefaultEngine.m */,
+				B425EC8025A2CBA600AA58E1 /* WKwebViewEngineBridge.h */,
+				B425EC8125A2CBA600AA58E1 /* WKWebView+DefaultEngine.h */,
+				B425EC8225A2CBA600AA58E1 /* NSObject+EnginBridge.m */,
+				B425EC8325A2CBA600AA58E1 /* WKwebViewEngineBridge.m */,
+			);
+			path = EngineBridge;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -447,13 +475,16 @@
 				7C31E0492317EC0900152D06 /* KKJSBridgeWeakScriptMessageDelegate.m in Sources */,
 				7C31E0542317EC0900152D06 /* KKWebViewPool.m in Sources */,
 				7C31E0462317EC0900152D06 /* KKJSBridgeEngine.m in Sources */,
+				B425EC8625A2CBA600AA58E1 /* WKwebViewEngineBridge.m in Sources */,
 				7C31E0502317EC0900152D06 /* KKWebView.m in Sources */,
+				B425EC8A25A2CBB400AA58E1 /* NSObject+SwizzleMethod.m in Sources */,
 				7C31E04A2317EC0900152D06 /* KKJSBridgeLogger.m in Sources */,
 				7C74CE6F249E0DEE00E22320 /* NSURLProtocol+KKJSBridgeWKWebView.m in Sources */,
 				7C74CE75249E119000E22320 /* KKJSBridgeSafeDictionary.m in Sources */,
 				7C31E0512317EC0900152D06 /* WKWebView+KKWebViewExtension.m in Sources */,
 				7C31DFBB2317CB1A00152D06 /* main.m in Sources */,
 				7C74CE6B249E0D5400E22320 /* KKJSBridgeAjaxURLProtocol.m in Sources */,
+				B425EC8425A2CBA600AA58E1 /* WKWebView+DefaultEngine.m in Sources */,
 				7C31E0532317EC0900152D06 /* WKWebView+KKWebViewReusable.m in Sources */,
 				7C31DFAD2317CB1700152D06 /* AppDelegate.m in Sources */,
 				7C31E0432317EC0900152D06 /* KKJSBridgeModuleRegister.m in Sources */,
@@ -462,6 +493,7 @@
 				7C31E04C2317EC0900152D06 /* KKJSBridgeModuleXMLHttpRequestDispatcher.m in Sources */,
 				7C31E0482317EC0900152D06 /* KKJSBridgeJSExecutor.m in Sources */,
 				7C31E0452317EC0900152D06 /* KKJSBridgeMessage.m in Sources */,
+				B425EC8525A2CBA600AA58E1 /* NSObject+EnginBridge.m in Sources */,
 				7C74CE7D24A048CF00E22320 /* KKJSBridgeSwizzle.m in Sources */,
 				7C31E0472317EC0900152D06 /* KKJSBridgeWeakProxy.m in Sources */,
 			);
