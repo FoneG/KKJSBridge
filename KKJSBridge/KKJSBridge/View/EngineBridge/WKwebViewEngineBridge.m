@@ -11,6 +11,7 @@
 #import "WKWebView+KKJSBridgeEngine.h"
 #import "WKWebView+KKWebViewReusable.h"
 #import "KKWebViewPool.h"
+#import "KKJSBridgeWebViewPointer.h"
 #import <objc/runtime.h>
 
 static NSString *WKwebViewEngineBridge_UIDelegateKKMethod = @"WKwebViewEngineBridge_UIDelegateKKMethod";
@@ -23,8 +24,11 @@ static NSString *WKwebViewEngineBridge_navigationDelegateKKMethod = @"WKwebViewE
 @implementation WKwebViewEngineBridge
 
 - (void)dealloc{
-    [self.webView removeObserver:self forKeyPath:@"UIDelegate"];
-    [self.webView removeObserver:self forKeyPath:@"navigationDelegate"];
+    if ([self.webView isKindOfClass:[WKWebView class]]) {
+        [self.webView removeObserver:self forKeyPath:@"UIDelegate"];
+        [self.webView removeObserver:self forKeyPath:@"navigationDelegate"];
+        [[KKJSBridgeWebViewPointer shared] clear:self.webView];
+    }
 }
 
 + (instancetype)bridgeForWebView:(WKWebView *)webView{
@@ -48,7 +52,7 @@ static NSString *WKwebViewEngineBridge_navigationDelegateKKMethod = @"WKwebViewE
     Class objClass = [newValue class];
     BOOL navigationDelegate_hook = [objClass kk_existSourceInstanceMethod:NSSelectorFromString(@"navigationDelegate_hook")];
     BOOL UIDelegate_hook = [objClass kk_existSourceInstanceMethod:NSSelectorFromString(@"UIDelegate_hook")];
-
+    
     if ([keyPath isEqualToString:@"navigationDelegate"] && !navigationDelegate_hook) {
         [objClass kk_AddInstanceEmptyMethod:NSSelectorFromString(@"navigationDelegate_hook")];
         
@@ -71,7 +75,7 @@ static NSString *WKwebViewEngineBridge_navigationDelegateKKMethod = @"WKwebViewE
 
 // 1、在发送请求之前，决定是否跳转
 - (void)kk_webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
-    NSLog(@"%@ %s",self, __func__);
+    NSLog(@"%s", __func__);
     /**
      【COOKIE 3】对服务器端重定向(302)/浏览器重定向(a标签[包括 target="_blank"]) 进行同步 cookie 处理。
      由于所有的跳转都会是 NSMutableURLRequest 类型，同时也无法单独区分出 302 服务器端重定向跳转，所以这里统一对服务器端重定向(302)/浏览器重定向(a标签[包括 target="_blank"])进行同步 cookie 处理。
@@ -88,7 +92,7 @@ static NSString *WKwebViewEngineBridge_navigationDelegateKKMethod = @"WKwebViewE
 
 // 2、在收到响应后，决定是否跳转
 - (void)kk_webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler {
-    NSLog(@"%@ %s",self, __func__);
+    NSLog(@"%s", __func__);
     // iOS 12 之后，响应头里 Set-Cookie 不再返回。 所以这里针对系统版本做区分处理。
     if (@available(iOS 11.0, *)) {
         // 【COOKIE 4】同步 WKWebView cookie 到 NSHTTPCookieStorage。
@@ -116,8 +120,6 @@ static NSString *WKwebViewEngineBridge_navigationDelegateKKMethod = @"WKwebViewE
     if ([[KKWebViewPool sharedInstance] containsReusableWebViewWithClass:webView.class]) {
         [[KKWebViewPool sharedInstance] enqueueWebViewWithClass:webView.class];
     }
-    
-    NSLog(@"%@ %s",self, __func__);
     [self kk_webView:webView didFinishNavigation:navigation];
 }
 
@@ -132,7 +134,7 @@ static NSString *WKwebViewEngineBridge_navigationDelegateKKMethod = @"WKwebViewE
 #pragma mark - WKUIDelegate
 // 创建一个新的 webView
 - (nullable WKWebView *)kk_webView:(WKWebView *)webView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration forNavigationAction:(WKNavigationAction *)navigationAction windowFeatures:(WKWindowFeatures *)windowFeatures {
-    NSLog(@"%@ %s",self, __func__);
+    NSLog(@"%s", __func__);
     if (!navigationAction.targetFrame.isMainFrame) {// 针对 <a target="_blank" href="" > 做处理。同时也会同步 cookie， 保持 loadRequest 加载请求携带 cookie 的一致性。
         [webView loadRequest:[KKWebViewCookieManager fixRequest:navigationAction.request]];
     }
@@ -141,7 +143,7 @@ static NSString *WKwebViewEngineBridge_navigationDelegateKKMethod = @"WKwebViewE
 
 // webView 中的提示弹窗
 - (void)kk_webView:(WKWebView *)webView runJavaScriptAlertPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(void))completionHandler {
-    NSLog(@"%@ %s",self, __func__);
+    NSLog(@"%s", __func__);
     if (![WKwebViewEngineBridge canShowPanelWithWebView:webView]) {
         completionHandler();
         return;
@@ -170,7 +172,7 @@ static NSString *WKwebViewEngineBridge_navigationDelegateKKMethod = @"WKwebViewE
 
 // webView 中的确认弹窗
 - (void)kk_webView:(WKWebView *)webView runJavaScriptConfirmPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(BOOL result))completionHandler {
-    NSLog(@"%@ %s",self, __func__);
+    NSLog(@"%s", __func__);
     if (![WKwebViewEngineBridge canShowPanelWithWebView:webView]) {
         completionHandler(NO);
         return;
@@ -206,7 +208,7 @@ static NSString *WKwebViewEngineBridge_navigationDelegateKKMethod = @"WKwebViewE
 
 // webView 中的输入框
 - (void)kk_webView:(WKWebView *)webView runJavaScriptTextInputPanelWithPrompt:(NSString *)prompt defaultText:(nullable NSString *)defaultText initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(NSString * _Nullable result))completionHandler {
-    NSLog(@"%@ %s",self, __func__);
+    NSLog(@"%s", __func__);
 
     if (![WKwebViewEngineBridge canShowPanelWithWebView:webView]) {
         completionHandler(nil);

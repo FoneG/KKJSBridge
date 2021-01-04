@@ -38,16 +38,6 @@ static id<KKJSBridgeAjaxDelegateManager> globalAjaxDelegateManager;
 - (void)setEnableAjaxHook:(BOOL)enableAjaxHook {
     _enableAjaxHook = enableAjaxHook;
     
-#ifdef KKAjaxProtocolHook
-    if (enableAjaxHook) {
-        [NSURLProtocol KKJSBridgeRegisterScheme:@"https"];
-        [NSURLProtocol KKJSBridgeRegisterScheme:@"http"];
-    } else {
-        [NSURLProtocol KKJSBridgeUnregisterScheme:@"https"];
-        [NSURLProtocol KKJSBridgeUnregisterScheme:@"http"];
-    }
-#endif
-    
     NSString *script = [NSString stringWithFormat:@"window.KKJSBridgeConfig.enableAjaxHook(%@)", [NSNumber numberWithBool:enableAjaxHook]];
     [self evaluateConfigScript:script];
 }

@@ -12,6 +12,9 @@
 #import "KKWebViewCookieManager.h"
 #import "WKWebView+KKWebViewReusable.h"
 #import "WKWebView+KKJSBridgeEngine.h"
+#import "KKWebViewPool.h"
+#import "KKJSBridgeWebViewPointer.h"
+#import "KKJSBridgeGlobalConfig.h"
 #import <objc/runtime.h>
 
 @interface WKWebView ()<WKNavigationDelegate,WKUIDelegate>
@@ -24,69 +27,37 @@
     [WKWebView kk_swizzleOrAddInstanceMethod:@selector(loadRequest:) withNewSel:@selector(mb_loadRequest:) withNewSelClass:WKWebView.class];
 }
 
+
 - (instancetype)mb_initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration *)configuration {
+    //放入回收池, 用于全局管理WebVie
+    [[KKJSBridgeWebViewPointer shared] enter:self];
+    
     if (!configuration) {
         configuration = [WKWebViewConfiguration new];
     }
-    WKWebView *webView = [self mb_initWithFrame:frame configuration:configuration];
-    //共享同一个WKProcessPool实例
+    [self mb_initWithFrame:frame configuration:configuration];
     if (!configuration.userContentController) {
         configuration.userContentController = [WKUserContentController new];
     }
-    webView.configuration.processPool = [WKWebView processPool];
-    
-    KKJSBridgeEngine *jsBridgeEngine = [KKJSBridgeEngine bridgeForWebView:self];
-    [self setKkBridge:jsBridgeEngine];
-    /// 不能再这里做hook，因为会导致循环
-    jsBridgeEngine.bridgeReadyCallback = ^(KKJSBridgeEngine * _Nonnull engine) {
-        NSString *event = @"customEvent";
-        NSDictionary *data = @{
-            @"action": @"testAction",
-            @"data": @YES
-        };
-        [engine dispatchEvent:event data:data];
-    };
-    
-    WKwebViewEngineBridge *bridge = [WKwebViewEngineBridge bridgeForWebView:webView];
-    [webView setBridge:bridge];
-    
-    webView.navigationDelegate = webView;
-    webView.UIDelegate = webView;
-    
-    NSLog(@"%s" ,__func__);
-    return webView;
-}
+    self.configuration.processPool = [WKWebView processPool];
 
-- (void)instanceDefaultEngine{
-    NSLog(@"%s" ,__func__);
-    if (self.kk_engine) {
-        self.kk_engine.config.enableAjaxHook = YES;
-        return;
-    }
-    /// hook拦截
-    KKJSBridgeEngine *jsBridgeEngine = [KKJSBridgeEngine bridgeForWebView:self];
-    [self setKkBridge:jsBridgeEngine];
-    /// 不能再这里做hook，因为会导致循环
-    jsBridgeEngine.bridgeReadyCallback = ^(KKJSBridgeEngine * _Nonnull engine) {
-        NSString *event = @"customEvent";
-        NSDictionary *data = @{
-            @"action": @"testAction",
-            @"data": @YES
-        };
-        [engine dispatchEvent:event data:data];
-    };
-#pragma warning - 可以给个全局开关
-    if (YES) {
-        jsBridgeEngine.config.enableAjaxHook = YES;
-    }
+    [self createJSBridgeEngine];
+    
+    WKwebViewEngineBridge *bridge = [WKwebViewEngineBridge bridgeForWebView:self];
+    [self setBridge:bridge];
+    
+    self.navigationDelegate = self;
+    self.UIDelegate = self;
+    return self;
 }
 
 /**
  【COOKIE 1】同步首次请求的 cookie
  */
 - (nullable WKNavigation *)mb_loadRequest:(NSURLRequest *)request {
-#pragma warning 每次进入回收池，kk_engine会被丢失, WKUserScript会被移除。所以最好重新处理kk_engine逻辑
-    [self instanceDefaultEngine];
+    if (!self.kk_engine) {
+        [self createJSBridgeEngine];
+    }
     if (request.URL.scheme.length > 0) {
         [self syncAjaxCookie];
         NSMutableURLRequest *requestWithCookie = request.mutableCopy;
@@ -105,6 +76,20 @@
         WKUserScript *cookieScript = [[WKUserScript alloc] initWithSource:[KKWebViewCookieManager ajaxCookieScripts] injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:NO];
         [self.configuration.userContentController addUserScript:cookieScript];
     }
+}
+
+
+- (void)createJSBridgeEngine{
+    KKJSBridgeEngine *jsBridgeEngine = [KKJSBridgeEngine bridgeForWebView:self];
+    self.kk_engine.config.enableAjaxHook = [KKJSBridgeGlobalConfig config].enableAjaxHook;
+    jsBridgeEngine.bridgeReadyCallback = ^(KKJSBridgeEngine * _Nonnull engine) {
+        NSString *event = @"customEvent";
+        NSDictionary *data = @{
+            @"action": @"testAction",
+            @"data": @YES
+        };
+        [engine dispatchEvent:event data:data];
+    };
 }
 
 #pragma mark - process
@@ -127,22 +112,12 @@
 }
 
 
-#pragma mark - lazy
-
 - (WKwebViewEngineBridge *)bridge{
     return objc_getAssociatedObject(self, @selector(setBridge:));
 }
 
 - (void)setBridge:(WKwebViewEngineBridge *)jsBridgeEngine {
     objc_setAssociatedObject(self, @selector(setBridge:), jsBridgeEngine, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (KKJSBridgeEngine *)kkBridge{
-    return objc_getAssociatedObject(self, @selector(setKkBridge:));
-}
-
-- (void)setKkBridge:(KKJSBridgeEngine *)kkBridge {
-    objc_setAssociatedObject(self, @selector(setKkBridge:), kkBridge, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 

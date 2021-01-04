@@ -6,6 +6,12 @@
 //
 
 #import "KKJSBridgeGlobalConfig.h"
+#import "KKJSBridgeConfig.h"
+#import "NSURLProtocol+KKJSBridgeWKWebView.h"
+#import "WKWebView+KKJSBridgeEngine.h"
+#import "KKJSBridgeEngine.h"
+#import "KKJSBridgeWebViewPointer.h"
+#import <WebKit/WebKit.h>
 
 @implementation KKJSBridgeGlobalConfig
 
@@ -21,13 +27,19 @@
 - (void)setEnableAjaxHook:(BOOL)enableAjaxHook{
     _enableAjaxHook = enableAjaxHook;
     
-    /// 移除监听
+#ifdef KKAjaxProtocolHook
+    if (enableAjaxHook) {
+        [NSURLProtocol KKJSBridgeRegisterScheme:@"https"];
+        [NSURLProtocol KKJSBridgeRegisterScheme:@"http"];
+    } else {
+        [NSURLProtocol KKJSBridgeUnregisterScheme:@"https"];
+        [NSURLProtocol KKJSBridgeUnregisterScheme:@"http"];
+    }
+#endif
     
-    
-    /// 通知对应webView关闭ajaxHook开关
-    
-    
-    ///
+    for (WKWebView *webView in [KKJSBridgeWebViewPointer shared].enqueueWebViews.objectEnumerator) {
+        webView.kk_engine.config.enableAjaxHook = YES;
+    }
 }
 
 

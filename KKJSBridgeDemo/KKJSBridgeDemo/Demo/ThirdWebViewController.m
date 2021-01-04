@@ -24,7 +24,7 @@
     NSString *url = @"https://www.baidu.com";
     
     self.view.backgroundColor = [UIColor whiteColor];
-    ThridWebView *webView = [[ThridWebView alloc] initWithFrame:self.view.bounds];
+    ThridWebView *webView = [[ThridWebView alloc] initWithFrame:self.view.bounds configuration:[WKWebViewConfiguration new]];
     [self.view addSubview:webView];
     [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];
 }

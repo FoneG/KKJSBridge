@@ -15,5 +15,6 @@
 #import "KKWebView.h"
 #import "KKWebViewPool.h"
 #import "KKWebViewCookieManager.h"
+#import "KKJSBridgeGlobalConfig.h"
 
 #endif /* KKJSBridge_h */
