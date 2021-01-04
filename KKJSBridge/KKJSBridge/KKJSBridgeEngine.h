@@ -20,7 +20,7 @@ typedef void (^KKJSBridgeReadyCallback)(KKJSBridgeEngine *engine);
  */
 @interface KKJSBridgeEngine : NSObject
 
-@property (nonatomic, weak, readonly) WKWebView *webView; // 与桥接器对应的 webView
+@property (nonatomic, unsafe_unretained, readonly) WKWebView *webView; // 与桥接器对应的 webView
 @property (nonatomic, strong, readonly) KKJSBridgeModuleRegister *moduleRegister; // 模块注册者
 @property (nonatomic, strong, readonly) KKJSBridgeConfig *config; // jsbridge 配置
 @property (nonatomic, assign, getter=isBridgeReady) BOOL bridgeReady; // jsbridge 是否已经 ready

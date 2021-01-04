@@ -26,6 +26,8 @@
         
     // 注册 HtmlURLProtocol，使用离线包
     [NSURLProtocol registerClass:HtmlURLProtocol.class];
+    
+    [KKJSBridgeGlobalConfig config].enableAjaxHook = YES;
 }
 - (IBAction)thirdClickAction:(id)sender {
     ThirdWebViewController *vc = [[ThirdWebViewController alloc] init];

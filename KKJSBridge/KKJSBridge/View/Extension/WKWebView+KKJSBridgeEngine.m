@@ -14,13 +14,15 @@
 @implementation WKWebView (KKJSBridgeEngine)
 
 - (KKJSBridgeEngine *)kk_engine {
-    KKJSBridgeWeakProxy *proxy = objc_getAssociatedObject(self, @selector(kk_engine));
-    return proxy.target;
+    return objc_getAssociatedObject(self, @selector(kk_engine));
+//    KKJSBridgeWeakProxy *proxy = objc_getAssociatedObject(self, @selector(kk_engine));
+//    return proxy.target;
 }
 
 - (void)setKk_engine:(KKJSBridgeEngine *)kk_engine {
-    KKJSBridgeWeakProxy *proxy = [KKJSBridgeWeakProxy proxyWithTarget:kk_engine];
-    objc_setAssociatedObject(self, @selector(kk_engine), proxy, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(kk_engine), kk_engine, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+//    KKJSBridgeWeakProxy *proxy = [KKJSBridgeWeakProxy proxyWithTarget:kk_engine];
+//    objc_setAssociatedObject(self, @selector(kk_engine), proxy, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 #pragma mark - 处理 prompt 同步 JS 调用

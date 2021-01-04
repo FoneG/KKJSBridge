@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  KKJSBridgeEngine 在安装的时候，会赋值
  */
-@property (nonatomic, weak) KKJSBridgeEngine *kk_engine;
+@property (nonatomic, strong) KKJSBridgeEngine *kk_engine;
 
 /**
  处理同步调用

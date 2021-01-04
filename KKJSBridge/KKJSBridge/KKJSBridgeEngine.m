@@ -17,7 +17,7 @@ static NSString * const KKJSBridgeMessageName = @"KKJSBridgeMessage";
 
 @interface KKJSBridgeEngine()<WKScriptMessageHandler>
 
-@property (nonatomic, weak, readwrite) WKWebView *webView;
+@property (nonatomic, unsafe_unretained, readwrite) WKWebView *webView;
 @property (nonatomic, strong, readwrite) KKJSBridgeModuleRegister *moduleRegister; // 模块注册者
 @property (nonatomic, strong, readwrite) KKJSBridgeMessageDispatcher *dispatcher; // 消息分发者
 @property (nonatomic, strong, readwrite) KKJSBridgeConfig *config; // jsbridge 配置

@@ -29,7 +29,7 @@
 
 
 - (instancetype)mb_initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration *)configuration {
-    //放入回收池, 用于全局管理WebVie
+    //放入Pointer池, 用于全局管理WebVie
     [[KKJSBridgeWebViewPointer shared] enter:self];
     
     if (!configuration) {
