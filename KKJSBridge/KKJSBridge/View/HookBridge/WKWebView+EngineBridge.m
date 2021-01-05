@@ -6,25 +6,23 @@
 //
 
 #import "WKWebView+EngineBridge.h"
-#import "NSObject+SwizzleMethod.h"
-#import "WKwebViewEngineBridge.h"
+#import "KKJSBridgeSwizzle.h"
+#import "WKWebViewHookBridge.h"
 #import "KKJSBridgeEngine.h"
-#import "KKWebViewCookieManager.h"
-#import "WKWebView+KKWebViewReusable.h"
 #import "WKWebView+KKJSBridgeEngine.h"
-#import "KKWebViewPool.h"
 #import "KKJSBridgeWebViewPointer.h"
 #import "KKJSBridgeGlobalConfig.h"
+#import "KKWebViewCookieManager.h"
 #import <objc/runtime.h>
 
 @interface WKWebView ()<WKNavigationDelegate,WKUIDelegate>
 @end
 
-@implementation WKWebView (EngineBridge)
+@implementation WKWebView (HookBridge)
 
 + (void)load{
-    [WKWebView kk_swizzleOrAddInstanceMethod:@selector(initWithFrame:configuration:) withNewSel:@selector(mb_initWithFrame:configuration:) withNewSelClass:WKWebView.class];
-    [WKWebView kk_swizzleOrAddInstanceMethod:@selector(loadRequest:) withNewSel:@selector(mb_loadRequest:) withNewSelClass:WKWebView.class];
+    KKJSBridgeSwizzleMethod(WKWebView.class, @selector(initWithFrame:configuration:), WKWebView.class, @selector(mb_initWithFrame:configuration:));
+    KKJSBridgeSwizzleMethod(WKWebView.class, @selector(loadRequest:), WKWebView.class, @selector(mb_loadRequest:));
 }
 
 
@@ -32,7 +30,7 @@
     //放入Pointer池, 用于全局管理WebVie
     [[KKJSBridgeWebViewPointer shared] enter:self];
     
-    if (!configuration) {
+    if (!configuration) { 
         configuration = [WKWebViewConfiguration new];
     }
     [self mb_initWithFrame:frame configuration:configuration];
@@ -43,7 +41,7 @@
 
     [self createJSBridgeEngine];
     
-    WKwebViewEngineBridge *bridge = [WKwebViewEngineBridge bridgeForWebView:self];
+    WKWebViewHookBridge *bridge = [WKWebViewHookBridge bridgeForWebView:self];
     [self setBridge:bridge];
     
     self.navigationDelegate = self;
@@ -55,6 +53,7 @@
  【COOKIE 1】同步首次请求的 cookie
  */
 - (nullable WKNavigation *)mb_loadRequest:(NSURLRequest *)request {
+    /// 回收池取出的webView会被清除kk_engine
     if (!self.kk_engine) {
         [self createJSBridgeEngine];
     }
@@ -112,11 +111,11 @@
 }
 
 
-- (WKwebViewEngineBridge *)bridge{
+- (WKWebViewHookBridge *)bridge{
     return objc_getAssociatedObject(self, @selector(setBridge:));
 }
 
-- (void)setBridge:(WKwebViewEngineBridge *)jsBridgeEngine {
+- (void)setBridge:(WKWebViewHookBridge *)jsBridgeEngine {
     objc_setAssociatedObject(self, @selector(setBridge:), jsBridgeEngine, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 

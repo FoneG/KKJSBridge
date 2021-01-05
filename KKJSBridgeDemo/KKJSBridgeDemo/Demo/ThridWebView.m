@@ -7,6 +7,11 @@
 //
 
 #import "ThridWebView.h"
+#import <KKJSBridge/KKJSBridgeSwizzle.h>
+
+@interface ThridWebView () <WKNavigationDelegate>
+
+@end
 
 @implementation ThridWebView
 
@@ -15,5 +20,11 @@
     }
     return self;
 }
+
+
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation{
+    NSLog(@"ThridWebView didFinishNavigation");
+}
+
 
 @end

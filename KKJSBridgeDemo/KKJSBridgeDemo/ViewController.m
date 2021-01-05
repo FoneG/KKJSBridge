@@ -72,7 +72,7 @@
     }
     url = @"https://h5.leoao.com/fit-m/#/pages/pt/index";
     url = @"https://h5.leoao.com/multiple/coach/cert.html#/certEdit";
-    url = @"http://www.baidu.com";
+    url = @"https://www.baidu.com";
     WebViewController *web = [[WebViewController alloc] initWithUrl:url];
     [self.navigationController pushViewController:web animated:YES];
 }

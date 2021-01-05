@@ -5,23 +5,20 @@
 //  Created by FoneG on 2020/12/30.
 //
 
-#import "WKwebViewEngineBridge.h"
-#import "NSObject+SwizzleMethod.h"
+#import "WKWebViewHookBridge.h"
 #import "KKWebViewCookieManager.h"
 #import "WKWebView+KKJSBridgeEngine.h"
 #import "WKWebView+KKWebViewReusable.h"
 #import "KKWebViewPool.h"
 #import "KKJSBridgeWebViewPointer.h"
+#import "KKJSBridgeSwizzle.h"
 #import <objc/runtime.h>
 
-static NSString *WKwebViewEngineBridge_UIDelegateKKMethod = @"WKwebViewEngineBridge_UIDelegateKKMethod";
-static NSString *WKwebViewEngineBridge_navigationDelegateKKMethod = @"WKwebViewEngineBridge_navigationDelegateKKMethod";
-
-@interface WKwebViewEngineBridge ()<WKUIDelegate, WKNavigationDelegate>
+@interface WKWebViewHookBridge ()<WKUIDelegate, WKNavigationDelegate>
 @property (nonatomic, unsafe_unretained, readwrite) WKWebView *webView;
 @end
 
-@implementation WKwebViewEngineBridge
+@implementation WKWebViewHookBridge
 
 - (void)dealloc{
     if ([self.webView isKindOfClass:[WKWebView class]]) {
@@ -32,7 +29,7 @@ static NSString *WKwebViewEngineBridge_navigationDelegateKKMethod = @"WKwebViewE
 }
 
 + (instancetype)bridgeForWebView:(WKWebView *)webView{
-    WKwebViewEngineBridge *bridge = [[WKwebViewEngineBridge alloc] init];
+    WKWebViewHookBridge *bridge = [[WKWebViewHookBridge alloc] init];
     bridge.webView = webView;
     [webView addObserver:bridge forKeyPath:@"UIDelegate" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:nil];
     [webView addObserver:bridge forKeyPath:@"navigationDelegate" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
@@ -49,25 +46,36 @@ static NSString *WKwebViewEngineBridge_navigationDelegateKKMethod = @"WKwebViewE
     if ([[newValue class] isMemberOfClass:[oldValue class]]) {
         return;
     }
-    Class objClass = [newValue class];
-    BOOL navigationDelegate_hook = [objClass kk_existSourceInstanceMethod:NSSelectorFromString(@"navigationDelegate_hook")];
-    BOOL UIDelegate_hook = [objClass kk_existSourceInstanceMethod:NSSelectorFromString(@"UIDelegate_hook")];
-    
-    if ([keyPath isEqualToString:@"navigationDelegate"] && !navigationDelegate_hook) {
-        [objClass kk_AddInstanceEmptyMethod:NSSelectorFromString(@"navigationDelegate_hook")];
         
-        [objClass kk_swizzleOrAddInstanceMethod:@selector(webView:decidePolicyForNavigationAction:decisionHandler:) withNewSel:@selector(kk_webView:decidePolicyForNavigationAction:decisionHandler:) withNewSelClass:WKwebViewEngineBridge.class];
-        [objClass kk_swizzleOrAddInstanceMethod:@selector(webView:decidePolicyForNavigationResponse:decisionHandler:) withNewSel:@selector(kk_webView:decidePolicyForNavigationResponse:decisionHandler:) withNewSelClass:WKwebViewEngineBridge.class];
-        [objClass kk_swizzleOrAddInstanceMethod:@selector(webView:didFinishNavigation:) withNewSel:@selector(kk_webView:didFinishNavigation:) withNewSelClass:WKwebViewEngineBridge.class];
-        [objClass kk_swizzleOrAddInstanceMethod:@selector(webView:didReceiveAuthenticationChallenge:completionHandler:) withNewSel:@selector(kk_webView:didReceiveAuthenticationChallenge:completionHandler:) withNewSelClass:WKwebViewEngineBridge.class];
-    }
-    else if([keyPath isEqualToString:@"UIDelegate"] && !UIDelegate_hook){
-        [objClass kk_AddInstanceEmptyMethod:NSSelectorFromString(@"UIDelegate_hook")];
+    @synchronized (self) {
+        Class objClass = [newValue class];
 
-        [objClass kk_swizzleOrAddInstanceMethod:@selector(webView:createWebViewWithConfiguration:forNavigationAction:windowFeatures:) withNewSel:@selector(kk_webView:createWebViewWithConfiguration:forNavigationAction:windowFeatures:) withNewSelClass:WKwebViewEngineBridge.class];
-        [objClass kk_swizzleOrAddInstanceMethod:@selector(webView:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:) withNewSel:@selector(kk_webView:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:) withNewSelClass:WKwebViewEngineBridge.class];
-        [objClass kk_swizzleOrAddInstanceMethod:@selector(webView:runJavaScriptConfirmPanelWithMessage:initiatedByFrame:completionHandler:) withNewSel:@selector(kk_webView:runJavaScriptConfirmPanelWithMessage:initiatedByFrame:completionHandler:) withNewSelClass:WKwebViewEngineBridge.class];
-        [objClass kk_swizzleOrAddInstanceMethod:@selector(webView:runJavaScriptTextInputPanelWithPrompt:defaultText:initiatedByFrame:completionHandler:) withNewSel:@selector(kk_webView:runJavaScriptTextInputPanelWithPrompt:defaultText:initiatedByFrame:completionHandler:) withNewSelClass:WKwebViewEngineBridge.class];
+        if ([keyPath isEqualToString:@"navigationDelegate"]) {
+
+            SEL navigationDelegate_hookSEL = NSSelectorFromString([NSString stringWithFormat:@"%@_navigationDelegate_hook", NSStringFromClass(objClass)]);
+            if (KKJSBridgeExistRVoidIMPInstanceMethod(objClass, navigationDelegate_hookSEL)) {
+                return;
+            }
+            KKJSBridgeAddRVoidIMPMethod(objClass, navigationDelegate_hookSEL);
+            
+            KKJSBridgeSwizzleOrAddRVoidIMPInstanceMethod(objClass, @selector(webView:decidePolicyForNavigationAction:decisionHandler:), WKWebViewHookBridge.class, @selector(kk_webView:decidePolicyForNavigationAction:decisionHandler:));
+            KKJSBridgeSwizzleOrAddRVoidIMPInstanceMethod(objClass, @selector(webView:decidePolicyForNavigationResponse:decisionHandler:), WKWebViewHookBridge.class, @selector(kk_webView:decidePolicyForNavigationResponse:decisionHandler:));
+            KKJSBridgeSwizzleOrAddRVoidIMPInstanceMethod(objClass, @selector(webView:didFinishNavigation:), WKWebViewHookBridge.class, @selector(kk_webView:didFinishNavigation:));
+            KKJSBridgeSwizzleOrAddRVoidIMPInstanceMethod(objClass, @selector(webView:didReceiveAuthenticationChallenge:completionHandler:), WKWebViewHookBridge.class, @selector(kk_webView:didReceiveAuthenticationChallenge:completionHandler:));
+        }
+        else if([keyPath isEqualToString:@"UIDelegate"]){
+
+            SEL UIDelegate_hookSEL = NSSelectorFromString([NSString stringWithFormat:@"%@_UIDelegate_hook", NSStringFromClass(objClass)]);
+            if (KKJSBridgeExistRVoidIMPInstanceMethod(objClass, UIDelegate_hookSEL)) {
+                return;
+            }
+            KKJSBridgeAddRVoidIMPMethod(objClass, UIDelegate_hookSEL);
+
+            KKJSBridgeSwizzleOrAddRVoidIMPInstanceMethod(objClass, @selector(webView:createWebViewWithConfiguration:forNavigationAction:windowFeatures:), WKWebViewHookBridge.class, @selector(kk_webView:createWebViewWithConfiguration:forNavigationAction:windowFeatures:));
+            KKJSBridgeSwizzleOrAddRVoidIMPInstanceMethod(objClass, @selector(webView:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:), WKWebViewHookBridge.class, @selector(kk_webView:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:));
+            KKJSBridgeSwizzleOrAddRVoidIMPInstanceMethod(objClass, @selector(webView:runJavaScriptConfirmPanelWithMessage:initiatedByFrame:completionHandler:), WKWebViewHookBridge.class, @selector(kk_webView:runJavaScriptConfirmPanelWithMessage:initiatedByFrame:completionHandler:));
+            KKJSBridgeSwizzleOrAddRVoidIMPInstanceMethod(objClass, @selector(webView:runJavaScriptTextInputPanelWithPrompt:defaultText:initiatedByFrame:completionHandler:), WKWebViewHookBridge.class, @selector(kk_webView:runJavaScriptTextInputPanelWithPrompt:defaultText:initiatedByFrame:completionHandler:));
+        }
     }
 }
 
@@ -83,8 +91,7 @@ static NSString *WKwebViewEngineBridge_navigationDelegateKKMethod = @"WKwebViewE
     if ([navigationAction.request isKindOfClass:NSMutableURLRequest.class]) {
         [KKWebViewCookieManager syncRequestCookie:(NSMutableURLRequest *)navigationAction.request];
     }
-    
-    if (![[self class] kk_existSourceInstanceMethod:@selector(webView:decidePolicyForNavigationAction:decisionHandler:)]) {
+    if (!KKJSBridgeExistRVoidIMPInstanceMethod(self.class, @selector(webView:decidePolicyForNavigationAction:decisionHandler:))) {
         decisionHandler(WKNavigationActionPolicyAllow);
     }
     [self kk_webView:webView decidePolicyForNavigationAction:navigationAction decisionHandler:decisionHandler];
@@ -106,7 +113,7 @@ static NSString *WKwebViewEngineBridge_navigationDelegateKKMethod = @"WKwebViewE
         }
     }
     
-    if (![[self class] kk_existSourceInstanceMethod:@selector(webView:decidePolicyForNavigationResponse:decisionHandler:)]) {
+    if (!KKJSBridgeExistRVoidIMPInstanceMethod(self.class, @selector(webView:decidePolicyForNavigationResponse:decisionHandler:))) {
         decisionHandler(WKNavigationResponsePolicyAllow);
     }
     [self kk_webView:webView decidePolicyForNavigationResponse:navigationResponse decisionHandler:decisionHandler];
@@ -125,7 +132,7 @@ static NSString *WKwebViewEngineBridge_navigationDelegateKKMethod = @"WKwebViewE
 
 //// 4、需要校验服务器可信度时调用
 - (void)kk_webView:(WKWebView *)webView didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential))completionHandler {
-    if (![[self class] kk_existSourceInstanceMethod:@selector(webView:didReceiveAuthenticationChallenge:completionHandler:)]) {
+    if (!KKJSBridgeExistRVoidIMPInstanceMethod(self.class, @selector(webView:didReceiveAuthenticationChallenge:completionHandler:))) {
         completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
     }
     [self kk_webView:webView didReceiveAuthenticationChallenge:challenge completionHandler:completionHandler];
@@ -144,7 +151,7 @@ static NSString *WKwebViewEngineBridge_navigationDelegateKKMethod = @"WKwebViewE
 // webView 中的提示弹窗
 - (void)kk_webView:(WKWebView *)webView runJavaScriptAlertPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(void))completionHandler {
     NSLog(@"%s", __func__);
-    if (![WKwebViewEngineBridge canShowPanelWithWebView:webView]) {
+    if (![WKWebViewHookBridge canShowPanelWithWebView:webView]) {
         completionHandler();
         return;
     }
@@ -158,13 +165,13 @@ static NSString *WKwebViewEngineBridge_navigationDelegateKKMethod = @"WKwebViewE
                                                            completionHandler();
                                                        }])];
     
-    UIViewController *topPresentedViewController = [WKwebViewEngineBridge _topPresentedViewController];
+    UIViewController *topPresentedViewController = [WKWebViewHookBridge _topPresentedViewController];
     if (topPresentedViewController.presentingViewController) {
         completionHandler();
     } else {
         [topPresentedViewController presentViewController:alertController animated:YES completion:nil];
     }
-    if (![[self class] kk_existSourceInstanceMethod:@selector(webView:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:)]) {
+    if (!KKJSBridgeExistRVoidIMPInstanceMethod(self.class, @selector(webView:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:))) {
         completionHandler();
     }
     [self kk_webView:webView runJavaScriptAlertPanelWithMessage:message initiatedByFrame:frame completionHandler:completionHandler];
@@ -173,7 +180,7 @@ static NSString *WKwebViewEngineBridge_navigationDelegateKKMethod = @"WKwebViewE
 // webView 中的确认弹窗
 - (void)kk_webView:(WKWebView *)webView runJavaScriptConfirmPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(BOOL result))completionHandler {
     NSLog(@"%s", __func__);
-    if (![WKwebViewEngineBridge canShowPanelWithWebView:webView]) {
+    if (![WKWebViewHookBridge canShowPanelWithWebView:webView]) {
         completionHandler(NO);
         return;
     }
@@ -193,14 +200,14 @@ static NSString *WKwebViewEngineBridge_navigationDelegateKKMethod = @"WKwebViewE
                                                            completionHandler(YES);
                                                        }])];
     
-    UIViewController *topPresentedViewController = [WKwebViewEngineBridge _topPresentedViewController];
+    UIViewController *topPresentedViewController = [WKWebViewHookBridge _topPresentedViewController];
     if (topPresentedViewController.presentingViewController) {
         completionHandler(NO);
     } else {
         [topPresentedViewController presentViewController:alertController animated:YES completion:nil];
     }
     
-    if (![[self class] kk_existSourceInstanceMethod:@selector(webView:runJavaScriptConfirmPanelWithMessage:initiatedByFrame:completionHandler:)]) {
+    if (!KKJSBridgeExistRVoidIMPInstanceMethod(self.class, @selector(webView:runJavaScriptConfirmPanelWithMessage:initiatedByFrame:completionHandler:))) {
         completionHandler(NO);
     }
     [self kk_webView:webView runJavaScriptConfirmPanelWithMessage:message initiatedByFrame:frame completionHandler:completionHandler];
@@ -210,7 +217,7 @@ static NSString *WKwebViewEngineBridge_navigationDelegateKKMethod = @"WKwebViewE
 - (void)kk_webView:(WKWebView *)webView runJavaScriptTextInputPanelWithPrompt:(NSString *)prompt defaultText:(nullable NSString *)defaultText initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(NSString * _Nullable result))completionHandler {
     NSLog(@"%s", __func__);
 
-    if (![WKwebViewEngineBridge canShowPanelWithWebView:webView]) {
+    if (![WKWebViewHookBridge canShowPanelWithWebView:webView]) {
         completionHandler(nil);
         return;
     }
@@ -251,14 +258,14 @@ static NSString *WKwebViewEngineBridge_navigationDelegateKKMethod = @"WKwebViewE
                                                            completionHandler(nil);
                                                        }])];
     
-    UIViewController *topPresentedViewController = [WKwebViewEngineBridge _topPresentedViewController];
+    UIViewController *topPresentedViewController = [WKWebViewHookBridge _topPresentedViewController];
     if (topPresentedViewController.presentingViewController) {
         completionHandler(nil);
     } else {
         [topPresentedViewController presentViewController:alertController animated:YES completion:nil];
     }
     
-    if (![[self class] kk_existSourceInstanceMethod:@selector(webView:runJavaScriptTextInputPanelWithPrompt:defaultText:initiatedByFrame:completionHandler:)]) {
+    if (!KKJSBridgeExistRVoidIMPInstanceMethod(self.class, @selector(webView:runJavaScriptTextInputPanelWithPrompt:defaultText:initiatedByFrame:completionHandler:))) {
         completionHandler(nil);
     }
     [self kk_webView:webView runJavaScriptTextInputPanelWithPrompt:prompt defaultText:defaultText initiatedByFrame:frame completionHandler:completionHandler];

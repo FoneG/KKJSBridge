@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface WKwebViewEngineBridge : NSObject
+@interface WKWebViewHookBridge : NSObject
 /**
  为 webViewEngin 创建一个桥接
  

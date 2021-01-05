@@ -10,7 +10,7 @@
 #import <AFNetworking/AFNetworking.h>
 #import <KKJSBridge/KKJSBridge.h>
 #import "ModuleContext.h"
-#import "ModuleA.h"
+#import "ModuleA.h"        
 #import "ModuleB.h"
 #import "ModuleC.h"
 #import "ModuleDefault.h"
@@ -68,7 +68,7 @@
 
 - (void)commonInit {
     _webView = [[KKWebViewPool sharedInstance] dequeueWebViewWithClass:WKWebView.class webViewHolder:self];
-    
+    _webView.navigationDelegate = self;
 //    [self compatibleWebViewJavascriptBridge];
     [self registerModule];
     [self loadRequest];
@@ -191,11 +191,12 @@
 #pragma mark - WKNavigationDelegate
 // 在发送请求之前，决定是否跳转
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
+    NSLog(@"source decidePolicyForNavigationAction");
     decisionHandler(WKNavigationActionPolicyAllow);
-    NSLog(@"%s", __func__);
 }
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler {
+    NSLog(@"source decidePolicyForNavigationResponse");
     decisionHandler(WKNavigationResponsePolicyAllow);
 }
 
