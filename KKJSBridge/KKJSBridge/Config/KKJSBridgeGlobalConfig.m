@@ -38,7 +38,9 @@
 #endif
     
     for (WKWebView *webView in [KKJSBridgeWebViewPointer shared].enqueueWebViews.objectEnumerator) {
-        webView.kk_engine.config.enableAjaxHook = YES;
+        if (webView && [webView isKindOfClass:[WKWebView class]]) {
+            webView.kk_engine.config.enableAjaxHook = YES;
+        }
     }
 }
 

@@ -12,9 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface KKJSBridgeWebViewPointer : NSObject
 
-@property (nonatomic, strong) NSHashTable *enqueueWebViews;
-
 + (instancetype)shared;
+- (NSHashTable <WKWebView *>*)enqueueWebViews;
 - (void)enter:(WKWebView *)webview;
 - (void)clear:(WKWebView *)webview;
 
