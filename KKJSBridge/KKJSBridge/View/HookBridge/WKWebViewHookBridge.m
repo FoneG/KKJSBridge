@@ -89,6 +89,7 @@
      由于所有的跳转都会是 NSMutableURLRequest 类型，同时也无法单独区分出 302 服务器端重定向跳转，所以这里统一对服务器端重定向(302)/浏览器重定向(a标签[包括 target="_blank"])进行同步 cookie 处理。
      */
     if ([navigationAction.request isKindOfClass:NSMutableURLRequest.class]) {
+        NSLog(@"@@## 对服务器端重定向(302)/浏览器重定向(");
         [KKWebViewCookieManager syncRequestCookie:(NSMutableURLRequest *)navigationAction.request];
     }
     if (!KKJSBridgeExistRVoidIMPInstanceMethod(self.class, @selector(webView:decidePolicyForNavigationAction:decisionHandler:))) {
@@ -145,7 +146,7 @@
     if (!navigationAction.targetFrame.isMainFrame) {// 针对 <a target="_blank" href="" > 做处理。同时也会同步 cookie， 保持 loadRequest 加载请求携带 cookie 的一致性。
         [webView loadRequest:[KKWebViewCookieManager fixRequest:navigationAction.request]];
     }
-    return [self kk_webView:webView createWebViewWithConfiguration:configuration forNavigationAction:navigationAction windowFeatures:windowFeatures];
+    return nil;
 }
 
 // webView 中的提示弹窗
@@ -171,10 +172,6 @@
     } else {
         [topPresentedViewController presentViewController:alertController animated:YES completion:nil];
     }
-    if (!KKJSBridgeExistRVoidIMPInstanceMethod(self.class, @selector(webView:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:))) {
-        completionHandler();
-    }
-    [self kk_webView:webView runJavaScriptAlertPanelWithMessage:message initiatedByFrame:frame completionHandler:completionHandler];
 }
 
 // webView 中的确认弹窗
@@ -206,11 +203,6 @@
     } else {
         [topPresentedViewController presentViewController:alertController animated:YES completion:nil];
     }
-    
-    if (!KKJSBridgeExistRVoidIMPInstanceMethod(self.class, @selector(webView:runJavaScriptConfirmPanelWithMessage:initiatedByFrame:completionHandler:))) {
-        completionHandler(NO);
-    }
-    [self kk_webView:webView runJavaScriptConfirmPanelWithMessage:message initiatedByFrame:frame completionHandler:completionHandler];
 }
 
 // webView 中的输入框
@@ -264,11 +256,6 @@
     } else {
         [topPresentedViewController presentViewController:alertController animated:YES completion:nil];
     }
-    
-    if (!KKJSBridgeExistRVoidIMPInstanceMethod(self.class, @selector(webView:runJavaScriptTextInputPanelWithPrompt:defaultText:initiatedByFrame:completionHandler:))) {
-        completionHandler(nil);
-    }
-    [self kk_webView:webView runJavaScriptTextInputPanelWithPrompt:prompt defaultText:defaultText initiatedByFrame:frame completionHandler:completionHandler];
 }
 
 #pragma mark - private method
