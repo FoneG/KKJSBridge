@@ -12,6 +12,7 @@
 #import "KKWebViewPool.h"
 #import "KKJSBridgeWebViewPointer.h"
 #import "KKJSBridgeSwizzle.h"
+#import "UIView+KKJSBridgeTool.h"
 #import <objc/runtime.h>
 
 @interface WKWebViewHookBridge ()<WKUIDelegate, WKNavigationDelegate>
@@ -261,8 +262,8 @@
 #pragma mark - private method
 
 + (BOOL)canShowPanelWithWebView:(WKWebView *)webView {
-    if ([webView.holderObject isKindOfClass:[UIViewController class]]) {
-        UIViewController *vc = (UIViewController *)webView.holderObject;
+    if ([webView.kk_viewController isKindOfClass:[UIViewController class]]) {
+        UIViewController *vc = (UIViewController *)webView.kk_viewController;
         if (vc.isBeingPresented || vc.isBeingDismissed || vc.isMovingToParentViewController || vc.isMovingFromParentViewController) {
             return NO;
         }
