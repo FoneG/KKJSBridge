@@ -1,3 +1,7 @@
+### KKJSBridge是一个非常强大的组件，但它的局限性在于作者只是基于单个WebView做离线包的处理，所以必须控制WebView打开的时候不能跳转到非KKwebView子类的网页， 譬如说广告页面。广告页面一般都会触发一些用户行为的数据上报，然而没有继承KKJSBridge的他们就会会丢失Post请求的body。
+
+我在这里主要是对抽离了KKwebView的一些代理拦截操作，并把它们放到了WKWebViewHookBridge中做统一处理。但因为hook操作本身是一种不太安全并且可能跟其他库存在冲突的手段，在没有更好的处理方法之前，先独自优化吧。
+
 # KKJSBridge
 
 [![GitHub stars](https://img.shields.io/github/stars/karosLi/KKJSBridge)](https://github.com/karosLi/KKJSBridge/stargazers) [![GitHub forks](https://img.shields.io/github/forks/karosLi/KKJSBridge)](https://github.com/karosLi/KKJSBridge/network) [![GitHub issues](https://img.shields.io/github/issues/karosLi/KKJSBridge)](https://github.com/karosLi/KKJSBridge/issues) [![GitHub license](https://img.shields.io/github/license/karosLi/KKJSBridge)](https://github.com/karosLi/KKJSBridge/blob/master/LICENSE)
