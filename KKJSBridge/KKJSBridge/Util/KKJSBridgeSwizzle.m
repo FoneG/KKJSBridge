@@ -42,7 +42,7 @@ BOOL KKJSBridgeExistRVoidIMPInstanceMethod(Class originalCls, SEL originalSel){
         return NO;
     }
     // for: originalSel do not exist in originalCls
-    NSString *Name = [NSString stringWithFormat:@"rVoidIMP_%@", NSStringFromSelector(originalSel)];
+    NSString *Name = [NSString stringWithFormat:@"rVoidIMP_%@_%@", NSStringFromClass(originalCls), NSStringFromSelector(originalSel)];
     if (class_getInstanceMethod(originalCls, NSSelectorFromString(Name))) {
         return NO;
     }
@@ -76,7 +76,7 @@ BOOL KKJSBridgeSwizzleOrAddRVoidIMPInstanceMethod(Class originalCls, SEL origina
                         rVoidIMP,
                         NULL);
         //没有originalSel的实现，用rVoidIMP_标记
-        NSString *Name = [NSString stringWithFormat:@"rVoidIMP_%@", NSStringFromSelector(originalSel)];
+        NSString *Name = [NSString stringWithFormat:@"rVoidIMP_%@_%@", NSStringFromClass(originalCls), NSStringFromSelector(originalSel)];
         class_addMethod(originalCls,
                         NSSelectorFromString(Name),
                         rVoidIMP,

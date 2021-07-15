@@ -43,11 +43,12 @@
 		7C83A73A2340590400A49A52 /* KKJSBridgeStreamingMultipartFormData.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C83A7372340590300A49A52 /* KKJSBridgeStreamingMultipartFormData.m */; };
 		7C83A73B2340590400A49A52 /* KKJSBridgeURLRequestSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C83A7382340590300A49A52 /* KKJSBridgeURLRequestSerialization.m */; };
 		7CAFA8042567C9FE0039FF6D /* WKWebView+KKJSBridgeEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CAFA8032567C9FE0039FF6D /* WKWebView+KKJSBridgeEngine.m */; };
-		B425EC8625A2CBA600AA58E1 /* WKwebViewEngineBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = B425EC8325A2CBA600AA58E1 /* WKwebViewEngineBridge.m */; };
-		B425EC8A25A2CBB400AA58E1 /* NSObject+SwizzleMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = B425EC8925A2CBB400AA58E1 /* NSObject+SwizzleMethod.m */; };
-		B425ECD525A3489C00AA58E1 /* KKJSBridgeWebViewPointer.m in Sources */ = {isa = PBXBuildFile; fileRef = B425ECD325A3489C00AA58E1 /* KKJSBridgeWebViewPointer.m */; };
 		B425ECD625A3489C00AA58E1 /* KKJSBridgeGlobalConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = B425ECD425A3489C00AA58E1 /* KKJSBridgeGlobalConfig.m */; };
-		B425ECDA25A348C000AA58E1 /* WKWebView+EngineBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = B425ECD925A348C000AA58E1 /* WKWebView+EngineBridge.m */; };
+		B48DE9F326A021C1007133EB /* KKJSBridgeWebViewPointer.m in Sources */ = {isa = PBXBuildFile; fileRef = B48DE9ED26A021C1007133EB /* KKJSBridgeWebViewPointer.m */; };
+		B48DE9F426A021C1007133EB /* WKWebView+EngineBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = B48DE9F126A021C1007133EB /* WKWebView+EngineBridge.m */; };
+		B48DE9F526A021C1007133EB /* WKWebViewHookBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = B48DE9F226A021C1007133EB /* WKWebViewHookBridge.m */; };
+		B48DE9FB26A0221F007133EB /* KKJSBridgeSwizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = B48DE9FA26A0221F007133EB /* KKJSBridgeSwizzle.m */; };
+		B48DE9FF26A02247007133EB /* UIView+KKJSBridgeTool.m in Sources */ = {isa = PBXBuildFile; fileRef = B48DE9FE26A02247007133EB /* UIView+KKJSBridgeTool.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -123,16 +124,18 @@
 		7C83A7392340590300A49A52 /* KKJSBridgeStreamingMultipartFormData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KKJSBridgeStreamingMultipartFormData.h; sourceTree = "<group>"; };
 		7CAFA8022567C9FE0039FF6D /* WKWebView+KKJSBridgeEngine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WKWebView+KKJSBridgeEngine.h"; sourceTree = "<group>"; };
 		7CAFA8032567C9FE0039FF6D /* WKWebView+KKJSBridgeEngine.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "WKWebView+KKJSBridgeEngine.m"; sourceTree = "<group>"; };
-		B425EC8025A2CBA600AA58E1 /* WKwebViewEngineBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WKwebViewEngineBridge.h; sourceTree = "<group>"; };
-		B425EC8325A2CBA600AA58E1 /* WKwebViewEngineBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WKwebViewEngineBridge.m; sourceTree = "<group>"; };
-		B425EC8825A2CBB400AA58E1 /* NSObject+SwizzleMethod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SwizzleMethod.h"; sourceTree = "<group>"; };
-		B425EC8925A2CBB400AA58E1 /* NSObject+SwizzleMethod.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SwizzleMethod.m"; sourceTree = "<group>"; };
-		B425ECD125A3489C00AA58E1 /* KKJSBridgeWebViewPointer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KKJSBridgeWebViewPointer.h; sourceTree = "<group>"; };
 		B425ECD225A3489C00AA58E1 /* KKJSBridgeGlobalConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KKJSBridgeGlobalConfig.h; sourceTree = "<group>"; };
-		B425ECD325A3489C00AA58E1 /* KKJSBridgeWebViewPointer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KKJSBridgeWebViewPointer.m; sourceTree = "<group>"; };
 		B425ECD425A3489C00AA58E1 /* KKJSBridgeGlobalConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KKJSBridgeGlobalConfig.m; sourceTree = "<group>"; };
-		B425ECD825A348BF00AA58E1 /* WKWebView+EngineBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WKWebView+EngineBridge.h"; sourceTree = "<group>"; };
-		B425ECD925A348C000AA58E1 /* WKWebView+EngineBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WKWebView+EngineBridge.m"; sourceTree = "<group>"; };
+		B48DE9ED26A021C1007133EB /* KKJSBridgeWebViewPointer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KKJSBridgeWebViewPointer.m; sourceTree = "<group>"; };
+		B48DE9EE26A021C1007133EB /* WKWebViewHookBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WKWebViewHookBridge.h; sourceTree = "<group>"; };
+		B48DE9EF26A021C1007133EB /* WKWebView+EngineBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WKWebView+EngineBridge.h"; sourceTree = "<group>"; };
+		B48DE9F026A021C1007133EB /* KKJSBridgeWebViewPointer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KKJSBridgeWebViewPointer.h; sourceTree = "<group>"; };
+		B48DE9F126A021C1007133EB /* WKWebView+EngineBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WKWebView+EngineBridge.m"; sourceTree = "<group>"; };
+		B48DE9F226A021C1007133EB /* WKWebViewHookBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WKWebViewHookBridge.m; sourceTree = "<group>"; };
+		B48DE9F926A0221F007133EB /* KKJSBridgeSwizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KKJSBridgeSwizzle.h; sourceTree = "<group>"; };
+		B48DE9FA26A0221F007133EB /* KKJSBridgeSwizzle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KKJSBridgeSwizzle.m; sourceTree = "<group>"; };
+		B48DE9FD26A02247007133EB /* UIView+KKJSBridgeTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+KKJSBridgeTool.h"; sourceTree = "<group>"; };
+		B48DE9FE26A02247007133EB /* UIView+KKJSBridgeTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+KKJSBridgeTool.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -242,8 +245,10 @@
 		7C31E01B2317EC0800152D06 /* Util */ = {
 			isa = PBXGroup;
 			children = (
-				B425EC8825A2CBB400AA58E1 /* NSObject+SwizzleMethod.h */,
-				B425EC8925A2CBB400AA58E1 /* NSObject+SwizzleMethod.m */,
+				B48DE9FD26A02247007133EB /* UIView+KKJSBridgeTool.h */,
+				B48DE9FE26A02247007133EB /* UIView+KKJSBridgeTool.m */,
+				B48DE9F926A0221F007133EB /* KKJSBridgeSwizzle.h */,
+				B48DE9FA26A0221F007133EB /* KKJSBridgeSwizzle.m */,
 				7C670B43247E15E800366253 /* KKJSBridgeMacro.h */,
 				7C31E0222317EC0800152D06 /* KKJSBridgeJSExecutor.h */,
 				7C31E01F2317EC0800152D06 /* KKJSBridgeJSExecutor.m */,
@@ -304,7 +309,7 @@
 			children = (
 				7C31E03B2317EC0800152D06 /* KKWebView.h */,
 				7C31E0342317EC0800152D06 /* KKWebView.m */,
-				B425EC7D25A2CBA600AA58E1 /* EngineBridge */,
+				B48DE9EC26A021C1007133EB /* HookBridge */,
 				7C31E0352317EC0800152D06 /* Extension */,
 				7C31E0382317EC0800152D06 /* CookieManager */,
 				7C31E03C2317EC0800152D06 /* WebViewPool */,
@@ -381,17 +386,17 @@
 			path = FormData;
 			sourceTree = "<group>";
 		};
-		B425EC7D25A2CBA600AA58E1 /* EngineBridge */ = {
+		B48DE9EC26A021C1007133EB /* HookBridge */ = {
 			isa = PBXGroup;
 			children = (
-				B425ECD825A348BF00AA58E1 /* WKWebView+EngineBridge.h */,
-				B425ECD925A348C000AA58E1 /* WKWebView+EngineBridge.m */,
-				B425EC8025A2CBA600AA58E1 /* WKwebViewEngineBridge.h */,
-				B425EC8325A2CBA600AA58E1 /* WKwebViewEngineBridge.m */,
-				B425ECD125A3489C00AA58E1 /* KKJSBridgeWebViewPointer.h */,
-				B425ECD325A3489C00AA58E1 /* KKJSBridgeWebViewPointer.m */,
+				B48DE9F026A021C1007133EB /* KKJSBridgeWebViewPointer.h */,
+				B48DE9ED26A021C1007133EB /* KKJSBridgeWebViewPointer.m */,
+				B48DE9EF26A021C1007133EB /* WKWebView+EngineBridge.h */,
+				B48DE9F126A021C1007133EB /* WKWebView+EngineBridge.m */,
+				B48DE9EE26A021C1007133EB /* WKWebViewHookBridge.h */,
+				B48DE9F226A021C1007133EB /* WKWebViewHookBridge.m */,
 			);
-			path = EngineBridge;
+			path = HookBridge;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -469,26 +474,27 @@
 				7C74CE8124A0499600E22320 /* KKJSBridgeFormDataFile.m in Sources */,
 				7C31E0442317EC0900152D06 /* KKJSBridgeMessageDispatcher.m in Sources */,
 				7C31E04D2317EC0900152D06 /* KKJSBridgeXMLHttpRequest.m in Sources */,
-				B425ECD525A3489C00AA58E1 /* KKJSBridgeWebViewPointer.m in Sources */,
 				7CAFA8042567C9FE0039FF6D /* WKWebView+KKJSBridgeEngine.m in Sources */,
 				7C83A73B2340590400A49A52 /* KKJSBridgeURLRequestSerialization.m in Sources */,
 				7C31DFB02317CB1700152D06 /* ViewController.m in Sources */,
 				7C83A73A2340590400A49A52 /* KKJSBridgeStreamingMultipartFormData.m in Sources */,
 				7C31E04F2317EC0900152D06 /* KKJSBridgeConfig.m in Sources */,
 				7C31E0522317EC0900152D06 /* KKWebViewCookieManager.m in Sources */,
+				B48DE9F526A021C1007133EB /* WKWebViewHookBridge.m in Sources */,
+				B48DE9FF26A02247007133EB /* UIView+KKJSBridgeTool.m in Sources */,
+				B48DE9F326A021C1007133EB /* KKJSBridgeWebViewPointer.m in Sources */,
 				7C31E0422317EC0900152D06 /* KKJSBridgeModuleMetaClass.m in Sources */,
 				7C74CE72249E0F8E00E22320 /* KKJSBridgeXMLBodyCacheRequest.m in Sources */,
 				7C31E0492317EC0900152D06 /* KKJSBridgeWeakScriptMessageDelegate.m in Sources */,
 				7C31E0542317EC0900152D06 /* KKWebViewPool.m in Sources */,
 				7C31E0462317EC0900152D06 /* KKJSBridgeEngine.m in Sources */,
-				B425EC8625A2CBA600AA58E1 /* WKwebViewEngineBridge.m in Sources */,
 				7C31E0502317EC0900152D06 /* KKWebView.m in Sources */,
-				B425EC8A25A2CBB400AA58E1 /* NSObject+SwizzleMethod.m in Sources */,
 				7C31E04A2317EC0900152D06 /* KKJSBridgeLogger.m in Sources */,
 				7C74CE6F249E0DEE00E22320 /* NSURLProtocol+KKJSBridgeWKWebView.m in Sources */,
 				7C74CE75249E119000E22320 /* KKJSBridgeSafeDictionary.m in Sources */,
 				7C31E0512317EC0900152D06 /* WKWebView+KKWebViewExtension.m in Sources */,
 				7C31DFBB2317CB1A00152D06 /* main.m in Sources */,
+				B48DE9FB26A0221F007133EB /* KKJSBridgeSwizzle.m in Sources */,
 				7C74CE6B249E0D5400E22320 /* KKJSBridgeAjaxURLProtocol.m in Sources */,
 				7C31E0532317EC0900152D06 /* WKWebView+KKWebViewReusable.m in Sources */,
 				B425ECD625A3489C00AA58E1 /* KKJSBridgeGlobalConfig.m in Sources */,
@@ -498,7 +504,7 @@
 				7C31E04B2317EC0900152D06 /* KKJSBridgeModuleCookie.m in Sources */,
 				7C31E04C2317EC0900152D06 /* KKJSBridgeModuleXMLHttpRequestDispatcher.m in Sources */,
 				7C31E0482317EC0900152D06 /* KKJSBridgeJSExecutor.m in Sources */,
-				B425ECDA25A348C000AA58E1 /* WKWebView+EngineBridge.m in Sources */,
+				B48DE9F426A021C1007133EB /* WKWebView+EngineBridge.m in Sources */,
 				7C31E0452317EC0900152D06 /* KKJSBridgeMessage.m in Sources */,
 				7C74CE7D24A048CF00E22320 /* KKJSBridgeSwizzle.m in Sources */,
 				7C31E0472317EC0900152D06 /* KKJSBridgeWeakProxy.m in Sources */,
@@ -644,7 +650,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 7M2A8Q929Y;
+				DEVELOPMENT_TEAM = T6YKNC9RA4;
 				INFOPLIST_FILE = KKJSBridge/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -663,7 +669,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 7M2A8Q929Y;
+				DEVELOPMENT_TEAM = T6YKNC9RA4;
 				INFOPLIST_FILE = KKJSBridge/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
